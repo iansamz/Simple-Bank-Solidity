@@ -19,6 +19,6 @@ truffle test
 Truffle test brings error
 
 ```
-CompileError: /Users/iansamz/Projects/blockchain/Simple-Bank-Solidity/contracts/SimpleBank.sol:22:17: ParserError: Expected primary expression.
-        owner = payable(msg.sender);
+CompileError: /Users/iansamz/Projects/blockchain/Simple-Bank-Solidity/contracts/SimpleBank.sol:52:50: ParserError: Expected primary expression.
+        address payable payable_sender_address = payable(sender_address);
 ```
