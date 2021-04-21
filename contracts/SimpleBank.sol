@@ -9,7 +9,8 @@ pragma solidity >=0.4.22 <0.9.0;
 contract SimpleBank {
     uint8 private clientCount;
     mapping(address => uint256) private balances;
-    address payable public owner;
+    // address payable public owner;
+    address public owner;
 
     // Log the event about a deposit being made by an address and its amount
     event LogDepositMade(address indexed accountAddress, uint256 amount);
@@ -19,7 +20,8 @@ contract SimpleBank {
     constructor() public payable {
         require(msg.value == 30 ether, "30 ether initial funding required");
         /* Set the owner to the creator of this contract */
-        owner = payable(msg.sender);
+        // owner = payable(msg.sender);
+        owner = msg.sender;
         clientCount = 0;
     }
 
@@ -42,14 +44,14 @@ contract SimpleBank {
         return balances[msg.sender];
     }
 
-    function withdraw(uint256 withdrawAmount)
-        public
-        returns (uint256 remainingBal)
-    {
+    /// @notice Withdraw ether from bank
+    /// @return The balance remaining for the user
+    function withdraw(uint256 withdrawAmount) public returns (uint256) {
+        // TODO Fix Casting Issue
         address sender_address = msg.sender;
         address payable payable_sender_address = payable(sender_address);
         // Check enough balance available, otherwise just return balance
-        // require(balances[msg.sender] >= withdrawAmount); // research more into this
+        // require(balances[msg.sender] >= withdrawAmount); //TODO  research more into this
         if (withdrawAmount <= balances[msg.sender]) {
             balances[msg.sender] -= withdrawAmount;
             payable_sender_address.transfer(withdrawAmount);
