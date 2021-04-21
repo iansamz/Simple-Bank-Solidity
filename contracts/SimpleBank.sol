@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0
 
-pragma solidity >=0.7.0 <0.9.0;
+pragma solidity >=0.4.22 <0.9.0;
 
 /**
  * @title Simple Bank
@@ -9,7 +9,7 @@ pragma solidity >=0.7.0 <0.9.0;
 contract SimpleBank {
     uint8 private clientCount;
     mapping(address => uint256) private balances;
-    address public owner;
+    address payable public owner;
 
     // Log the event about a deposit being made by an address and its amount
     event LogDepositMade(address indexed accountAddress, uint256 amount);
@@ -19,7 +19,7 @@ contract SimpleBank {
     constructor() public payable {
         require(msg.value == 30 ether, "30 ether initial funding required");
         /* Set the owner to the creator of this contract */
-        owner = msg.sender;
+        owner = payable(msg.sender);
         clientCount = 0;
     }
 
@@ -46,12 +46,13 @@ contract SimpleBank {
         public
         returns (uint256 remainingBal)
     {
-        // require(balances[msg.sender] >= withdrawAmount);
-
+        address sender_address = msg.sender;
+        address payable payable_sender_address = payable(sender_address);
         // Check enough balance available, otherwise just return balance
+        // require(balances[msg.sender] >= withdrawAmount); // research more into this
         if (withdrawAmount <= balances[msg.sender]) {
             balances[msg.sender] -= withdrawAmount;
-            payable(msg.sender).transfer(withdrawAmount);
+            payable_sender_address.transfer(withdrawAmount);
         }
         return balances[msg.sender];
     }
